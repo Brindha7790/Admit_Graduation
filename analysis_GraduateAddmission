@@ -1,0 +1,46 @@
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
+
+
+csvFileLocation ='C:\Brindha\Python\graduate-admissions\Admission.csv'
+
+# Import the CSV File
+try:
+    data = pd.read_csv(str(csvFileLocation))
+    print(data.describe())
+    print(data.info())
+except Exception as e:
+    print(e)
+
+# Plotting the graphs
+plt.scatter(data['Chance_of_Admit'], data['SOP'],c = 'yellow', label ='SOP')
+plt.scatter(data['Chance_of_Admit'], data['LOR'])
+plt.scatter(data['Chance_of_Admit'], data['CGPA'])
+plt.scatter(data['Chance_of_Admit'], data['TOEFL_Score'])
+plt.show()
+
+## KNN Neighbor Method prediction
+print("########### KNN Neighbor Method prediction ############")
+data.Chance_of_Admit = data.Chance_of_Admit *100
+data.Chance_of_Admit = data.Chance_of_Admit.astype(int)
+y = data.Chance_of_Admit
+X = data.drop('Chance_of_Admit', axis=1)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+knn = KNeighborsClassifier(n_neighbors=3)
+knn.fit(X_train, y_train)
+print("Train set score: {:.2f}".format(knn.score(X_train, y_train)))
+print("Test set score: {:.2f}".format(knn.score(X_test, y_test)))
+
+
+## Linear Regression
+print("########### Linear Regression ############")
+lreg = LinearRegression()
+lreg.fit(X_train, y_train)
+print("Train set score: {:.2f}".format(lreg.score(X_train, y_train)))
+print("Test set score: {:.2f}".format(lreg.score(X_test, y_test)))
+
